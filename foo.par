@@ -118,7 +118,7 @@ GC_SD	0.1
 # with a file name corresponding to the identifiers of
 # the first column in the GTF annotation
 #
-GEN_DIR	../
+GEN_DIR	.
 
 # path to the library file of the run, either absolute
 # or relative to the location of the parameter file;
