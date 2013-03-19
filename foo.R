@@ -44,7 +44,7 @@ table(isexpr)
 #Separate the genes that are expressed:
 counts <- counts[isexpr,]
 
-ran <- sample(1:29164 , 2000)
+ran <- sample(1:sum(isexpr), 2000)
 
 counts[ran[1:500], 11:20] <- counts[ran[1:500], 11:20] + 200
 counts[ran[501:1000], 11:20] <- counts[ran[501:1000], 11:20] + 100
@@ -62,7 +62,7 @@ counts[counts < 0] <- 0
 nf <- calcNormFactors(counts)
 
 #VOOM!!!
-y <- voom(counts, plot = TRUE, lib.size=colSums(counts)*nf)
+y <- voom(counts, plot = FALSE, lib.size=colSums(counts)*nf)
 
 #plotMDS(y, top = 500, labels = c(rep("norm", 10), rep("treat", 10)), gene.selection = "common")
 groups <- as.factor(c(rep("norm", 10), rep("treat", 10)))
@@ -122,7 +122,7 @@ mld <- function(calls.grouped) {
 #length(sds)
 
 # pick epsilon to be one standard deviation from the mean.
-epsilon = 1
+epsilon = 1.3
 calls <- (abs(diffs) > (sds * epsilon)) * sign(diffs)
 all.calls <- apply(calls, 1, mld)
 expressed <- all.calls != "0"
@@ -148,6 +148,7 @@ tn <- negatives - fp
 truth <- !notexpr
 R1 <- rocdemo.sca(truth, fit2$F.p.value)
 
+es <- c()
 xs <- c()
 ys <- c()
 for (epsilon in seq(from=0.1, to=4, by=0.2)) {
@@ -164,13 +165,20 @@ for (epsilon in seq(from=0.1, to=4, by=0.2)) {
   fp <- sum(expressed[notexpr])
   tn <- negatives - fp
 
+  es <- c(es, epsilon)
   xs <- c(xs, fp/negatives)
   ys <- c(ys, tp/positives)
   }
 
-plot(R1)
+#plot(R1)
 
-lines(xs, ys)
-abline(0,1)
+#lines(xs, ys)
+#abline(0,1)
 
-volcanoplot(fit2[ran, ])
+#volcanoplot(fit2[ran, ])
+
+# get recount
+gravely <- load("modencode_fly_pooled.RData")
+rcounts <- exprs(modencodefly.eset.pooled[,1:20])
+nrf <- calcNormFactors(rcounts)
+vr <- voom(rcounts,plot=FALSE,lib.size=colSums(rcounts)*nrf)

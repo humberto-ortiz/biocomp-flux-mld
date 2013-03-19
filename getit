@@ -14,3 +14,5 @@ ftp://ftp.ensembl.org/pub/release-70/fasta/drosophila_melanogaster/dna/Drosophil
 ftp://ftp.ensembl.org/pub/release-70/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP5.70.dna.chromosome.X.fa.gz
 ftp://ftp.ensembl.org/pub/release-70/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP5.70.dna.chromosome.XHet.fa.gz
 ftp://ftp.ensembl.org/pub/release-70/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP5.70.dna.chromosome.YHet.fa.gz
+http://bowtie-bio.sourceforge.net/recount/pooled/modencode_fly_pooled.RData
+http://bowtie-bio.sourceforge.net/recount/ExpressionSets/modencodefly_eset.RData

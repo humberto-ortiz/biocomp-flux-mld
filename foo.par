@@ -196,7 +196,7 @@ READ_NUMBER	5000000
 # path to the GTF reference annotation, either absolute
 # or relative to the location of the parameter file
 #
-REF_FILE_NAME	Drosophila_melanogaster.BDGP5.70_sorted.gtf
+REF_FILE_NAME	Drosophila_melanogaster.BDGP5.70.gtf
 
 # Switch on/off Reverse Transcription
 #

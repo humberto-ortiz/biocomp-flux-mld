@@ -1,0 +1,218 @@
+% Humberto Ortiz-Zuazaga <humberto.ortiz@upr.edu>
+\documentclass{article}
+\usepackage[utf8]{inputenc} 
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+%\SweaveOpts{concordance=TRUE}
+\title{BIOCOMP'13: Majority logic decoding: a discrete method for detecting differential expression in {RNA-Seq} data}
+\author{Roberto Arce Corretjer\\
+  Department of Computer Science\\
+  Rio Piedras Campus\\
+  University of Puerto RIco\\
+  email: \texttt{racorretjer@gmail.com}\\
+  \and 
+  Humberto Ortiz-Zuazaga\thanks{Corresponding author: PO BOX 70377,
+San Juan, PR 00936–8377}\\
+  Department of Computer Science\\
+  Rio Piedras Campus\\
+  University of Puerto Rico\\
+  email: \texttt{humberto@hpcf.upr.edu}\\
+}
+\date{March 15, 2013}
+\maketitle
+
+\begin{abstract}
+We present a novel method of analysis of RNA-Seq data based on majority-logic-decoding. We apply the analysis to a simulation of differential gene expression and compare to a typical statistical analysis with linear models. Our technique results in a markedly improved false positive rate.
+
+\textbf{Keywords:} next-gen sequencing, finite dynamical systems, differential expression.
+\end{abstract}
+
+\section{Introduction}
+
+Gene regulatory networks are a valuable tool in the analysis of
+microarray data, and in the description of biological systems.  A well
+established current in microarray analysis is the reverse engineering
+problem: given a set of genes and a set of expression measurements
+under varying conditions, determine the nature of transcriptional
+regulation among the genes. A rich tradition of discrete Boolean
+approaches to this problem
+exists~\cite{akutsu_identification_1998,ideker_discovery_2000,kauffman_metabolic_1969,kauffman_origins_1993,liang_reveal_1998}.
+Recent research into finite fields as a richer and more efficient
+alternative to Boolean logic has proven
+fruitful~\cite{laubenbacher_dynamic_2001,moreno_finite_2002-1,avino-diaz_applications_2004}. We
+have developed a series of techniques for error-correction and
+clustering based on finite fields~\cite{ortiz-zuazaga_error_2007}. 
+
+The same
+variety of tools is not available for RNA-Seq~\cite{Nagalakshmi:2008fk} analysis, although the
+two experimental techniques share goals and some analytical framework.  Extending
+FDS to the analysis of RNA-Seq data will bring a new approach to the quickly growing
+corpus of RNA-Seq data. Our hypothesis is that FDS’s discrete nature is suited to modeling
+digital expression measurements. To test this hypothesis,
+we apply our techniques to a simulated gene expression experiment.
+
+%The rest of this paper is organized as follows: Section~\ref{methods}
+%describes our method for simulating differential gene expression
+%experiments, Section~\ref{}
+
+\section{Methods}
+\label{methods}
+
+\subsection{Discretization of expression}
+
+ \begin{enumerate}
+  \item Take base 2 logarithm of counts
+  \item Compute mean of the control samples counts of each transcript.
+  \item Subtract mean value of control samples from each treated sample count, to make counts
+    zero centered
+    \item Compute standard deviation of treated samples
+  \item Divide each treated sample by the standard deviation
+  \item Pick a discretization threshold $t$
+  \item For each sample, if normalized counts $> 1 t$, gene is
+    upregulated, $< -1 t$ gene is downregulated, otherwise no change
+  \item Compute majority logic decoding (mld) value over all samples for each gene
+  \end{enumerate}
+  
+  \subsection{Majority logic decoding}
+  
+  Upregulated samples are encoded as '+', downregulated as '-', and
+  unchanged as '0'.  The discretization then yields a list of symbols
+  for every sample of each gene.  Majority logic decoding looks as the
+  symbols for every sample and selects the symbol that appears in a
+  majority of samples.  This procedure has been adapted
+  from a similar procedure described for microarray data in~\cite{ortiz-zuazaga_error_2007}.
+  
+   \subsection{Verification}
+  
+   To validate our methods, we simulate gene expression counts and
+   apply our techniques.  We use \textit{flux
+     simulator}~\cite{griebel_modelling_2012}, a tool for generating
+   simulated RNA-Seq data. We generate 20 random gene expression
+   experiments using the \textit{Drosphila melanogaster} genome release 70 from
+   ENSEMBL~\cite{Flicek:2013fk}, and the default flux-simulator
+   parameters. These 20 runs are divided into 10 control samples and 10
+   treated samples. We randomly select 2000 transcripts from the 29,173
+   present in the simulated data. The 2000 are divided into 4 groups
+   of 500 each, and we add 100 and 200 to the treated or the controls
+   in each group, to simulate a spike-in experiment.
+   
+  \section{Results}
+  
+  Figures \ref{fig:voom} shows the variance vs mean for the simulated
+  data.  The plot in Figure \ref{fig:recount} shows the same
+  plot for a similar sample of data from
+  \textit{Drosphila melanogaster}~\cite{graveley_developmental_2010} from a public
+  repository of RNA-Seq data~\cite{frazee_recount:_2011}.
+  
+  We applied mld to the simulated spike-in data. Since the mld is
+  sensitive to the choice of threshold value $t$, we sweep over a
+  range of values and compute the false positive and false negative
+  rate.  We compare these rates to a linear model of
+  differential expression using the \verb|lmFit|~\cite{smyth_limma:_2005} function in the
+  \verb|limma|~\cite{smyth_linear_2004} package from
+  bioconductor~\cite{gentleman_bioconductor:_2004}. Figure~\ref{fig:roc}
+  shows the ROC curves for mld and the linear model. For  $t = 1.3$,
+  we correctly identified 1436 out of 2000 positives, while predicting
+  2779 false positives from the 27,166 negatives.
+<<label=roc,include=FALSE,echo=FALSE>>=
+library(limma)
+library(edgeR)
+library(genefilter)
+library(ROC)
+
+# see (or source) foo.R
+load(".RData")
+
+R1 <- rocdemo.sca(truth, fit2$F.p.value)
+plot(R1, main="Comparison of mld and lmFit", xlab="False positive rate", ylab="True positive rate")
+lines(xs, ys)
+abline(0,1)
+@ 
+\begin{figure}
+  \centering
+<<label=figvoom,fig=TRUE,echo=FALSE>>=
+v <- voom(counts, plot = TRUE, lib.size=colSums(counts)*nf)
+@   
+  \caption{Mean-variance relationship of simulated data.}
+  \label{fig:voom}
+\end{figure}
+\begin{figure}
+  \centering
+<<label=figrecount,fig=TRUE,echo=FALSE>>=
+library(edgeR)
+gravely <- load("modencode_fly_pooled.RData")
+rcounts <- exprs(modencodefly.eset.pooled[,1:20])
+nrf <- calcNormFactors(rcounts)
+vr <- voom(rcounts,plot=TRUE,lib.size=colSums(rcounts)*nrf)
+@   
+  \caption{Mean-variance relationship of real data.}
+  \label{fig:recount}
+\end{figure}
+\begin{figure}
+  \centering
+<<label=figroc,fig=true,echo=FALSE>>=
+<<roc>>
+@  
+  \caption{ROC curve for mld (upper curve) and a linear model fit (lower curve) on the simulated spike-in experiment.}
+  \label{fig:roc}
+\end{figure}
+
+The linear model fit can be used to predict the probability of
+differential expression for each transcript. Figure~\ref{fig:volcano}
+is a plot of the log odds of differential expression versus the log ratio
+of expresison for the 2000 spike-in transcripts. 
+\begin{figure}
+  \centering
+<<label=figvolcano,fig=TRUE,echo=FALSE>>=
+volcanoplot(fit2[ran, ])
+@ 
+  \caption{Volcanoplot of spike-in genes.}
+  \label{fig:volcano}
+\end{figure}
+ 
+  \section{Discussion}
+  
+  Our method of simulating differential expression of RNA-Seq data
+  seems to produce data very similar to real RNA-Seq data, although
+  Figure~\ref{fig:voom} shows reduced variance and mean expression
+  compared to Figure~\ref{fig:recount}.
+  
+  We have described a modification of majority logic decoding to handle
+  discrete gene expression data such as produced by RNA-Seq
+  experiments. We have tested the method by comparing with linear models
+  such as those produced by \verb|lmFit|. On simulated spike-in data,
+  our method results in a markedly improved
+  sensitivity. Figure~\ref{fig:volcano} shows that linear modelling of
+  the spike-in transcripts predicts log ratios of expression different
+  from zero for almost all spike-ins, but the large majority of
+  spike-in transcripts show no statistical support for differential
+  expression. It is unlikely that refinements of the linear model
+  would be able to distinguish the spike-in genes from the
+  negatives. The mld technique, conceptually simpler, demonstrates
+  better specificity, while keeping the false positive rate low.
+  
+  \section{Future studies}
+  
+  The spike-in experiment we simulated is a simple gene expression
+  experiment. We want to extend our simulation technique to allow
+  simulation of biologically relevant differential expression. In
+  particular, we would like to simulate a gene regulatory network
+  response and then use our mld technique to recover changes in
+  expression at different stages. This more complex simulation will
+  allow us to test other FDS techniques and adapt them to RNA-Seq
+  data. The next step after that would be to apply these techniques to
+  real RNA-Seq data.
+  
+\section{Acknowledgments}
+
+The authors received partial support from the PR-INBRE grant
+(P20GM103475) from the National Institute for General Medical Sciences
+of the National Institutes of Health.
+
+
+  \bibliographystyle{IEEEtran}
+  \bibliography{zotero}   
+
+
+\end{document}
