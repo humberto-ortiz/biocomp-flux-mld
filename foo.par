@@ -144,7 +144,7 @@ LOAD_NONCODING	true
 # number of RNA molecules initially in the experiment
 #
 # number default: 5000000
-NB_MOLECULES	5000000
+NB_MOLECULES	35000000
 
 # Switch on/off paired-end reads
 #
