@@ -9,7 +9,7 @@
 \author{Roberto Arce Corretjer\\
   Department of Computer Science\\
   Rio Piedras Campus\\
-  University of Puerto RIco\\
+  University of Puerto Rico\\
   email: \texttt{racorretjer@gmail.com}\\
   \and 
   Humberto Ortiz-Zuazaga\thanks{Corresponding author: PO BOX 70377,
