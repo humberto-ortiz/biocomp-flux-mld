@@ -5,18 +5,21 @@ library(ROC)
 
 foos <- vector()
 
-firstfoo <- read.table("foo0.pro" , header = FALSE, sep = "\t", fill = TRUE)
+col.names <- c("Locus", "Transcript_ID", "Coding", "Length", "Expressed Fraction", 
+               "Expressed Number", "Library Fraction", "Library Number","Sequenced Fraction", "Sequenced Number", "V11", "V12", "V13")
+
+firstfoo <- read.table("foo0.pro" , header = FALSE, sep = "\t", fill = TRUE,col.names=col.names,flush=TRUE)
 
 #Read foo*.pro using read.table:
 for (i in 0:19) {
   pro <- paste("foo", i, ".pro", sep = "")
   print(pro)
-  foo <- read.table(pro , header = FALSE, sep = "\t", fill = TRUE)[,8]
+  foo <- read.table(pro , header = FALSE, sep = "\t", fill = TRUE,col.names=col.names,flush=TRUE)[,10]
   print(length(foo))
   foos <- c(foos, foo[1:dim(firstfoo)[1]])
 }
 
-lastfoo <- read.table("foo19.pro" , header = FALSE, sep = "\t", fill = TRUE)
+lastfoo <- read.table("foo19.pro" , header = FALSE, sep = "\t", fill = TRUE,col.names=col.names,flush=TRUE)
 
 dim(firstfoo)
 dim(lastfoo)
@@ -89,8 +92,8 @@ table(calls)
 #41984   338
 
 row.index <- 1:length(calls)
-which.rows <- t(calls)
-row.index[t(which.rows)]
+#which.rows <- t(calls)
+#row.index[t(which.rows != 0)]
 
 ### mld
 row.means <- rowMeans(y$E)
