@@ -1,7 +1,7 @@
 MACTEX = /usr/local/texlive/2012/bin/x86_64-darwin
 LATEX  = $(MACTEX)/pdflatex
 BIBTEX = $(MACTEX)/bibtex
-VIEWER = open
+VIEWER = evince
 
 all: biocomp-hoz-rnaseq
 
@@ -10,10 +10,10 @@ biocomp-hoz-rnaseq: biocomp-hoz-rnaseq.tex
 	$(BIBTEX) $@
 	$(LATEX) $<
 	$(LATEX) $<
-	$(VIEWER) $@.pdf
+#	$(VIEWER) $@.pdf
 
 biocomp-hoz-rnaseq.tex: biocomp-hoz-rnaseq.Rnw .RData 
-	R CMD SWEAVE $<
+	R CMD Sweave $<
 
 .RData: foo.R modencode_fly_pooled.RData foo0.pro
 	R CMD BATCH foo.R

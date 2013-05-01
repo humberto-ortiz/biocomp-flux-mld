@@ -1,32 +1,72 @@
 % Humberto Ortiz-Zuazaga <humberto.ortiz@upr.edu>
-\documentclass{article}
-\usepackage[utf8]{inputenc} 
+\documentclass[conference]{worldcomp}
+
+\usepackage[hmargin=.75in,vmargin=1in]{geometry}
+\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{caption}
+\usepackage[utf8]{inputenc}
+\usepackage{Sweave}
+\setkeys{Gin}{width=0.9\columnwidth}
+
+%%% Class name, option, and packages above are mandatory for generating an appropriate format 
+%%% suitable for the WorldComp style. Therefore, do not make any changes unless you know 
+%%% what you are doing.
+%%% However, if you need to use the subfig package, you must call it BEFORE the caption package.
+%%% (NOTE: the subfig package probably will work but has not been tested.)
+
+%%% The worldcomp.cls is derived (in a quite dirty and quick manner) from the IEEEtrans.cls.
+%%% At least the following packages are incompatible with the worldcomp.cls:
+%%% <DO NOT USE THEM> setspace, titlesec, amsthm
+%%% There may be more, so if you use a package that produces a lot of errors or weird results, 
+%%% be advised to avoid that package.
+
+%%% Below packages are recommended to use for better results and compatible with the worldcomp.cls
+\usepackage{textcomp}
+\usepackage{epsfig,graphicx}
+\usepackage{xcolor}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{fixltx2e} % Fixing numbering problem when using figure/table* 
+\usepackage{booktabs}
+
+%%% Below packages are probably useful for some table-formatting purposes. Compatibility is not yet
+%%% tested but probably fine.
+%\usepackage{tabularx}
+%\usepackage{tabulary}
+
+%%% Using the hyperref package is not really necessary for conference papers, but if your paper includes
+%%% a lot of URLs, and you wish them to be line-breakable, it might be useful.  When you need to use the
+%%% hyperref package, make sure you set <colorlinks option> = true and all link colors black as shown in
+%%% the sample below (the sample calls the ifpdf package, too).
+%\usepackage{ifpdf} 
+%\ifpdf
+%\usepackage[pdftex,naturalnames,breaklinks=true,colorlinks=true,linkcolor=black,citecolor=black,filecolor=black,menucolor=black,urlcolor=black]{hyperref}
+%\else
+%\usepackage[dvips,naturalnames,breaklinks=true]{hyperref}
+%\fi
+
+\columnsep 6mm  %%% DO NOT CHANGE THIS
+
+
+\title{\bf Majority logic decoding: a discrete method for detecting differential expression in {RNA-Seq} data}
+%%%% Replace the author and institution/affiliation names. 
+%%%% Make sure the author names are boldface.
+\author{
+{\bfseries Humberto Ortiz-Zuazaga$^1$, Roberto Arce Corretjer$^1$}\\
+$^1$Department of Computer Science, University of Puerto Rico Rio Piedras, San Juan, Puerto Rico\\
+}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
-%\SweaveOpts{concordance=TRUE}
-\title{BIOCOMP'13: Majority logic decoding: a discrete method for detecting differential expression in {RNA-Seq} data}
-\author{Roberto Arce Corretjer\\
-  Department of Computer Science\\
-  Rio Piedras Campus\\
-  University of Puerto RIco\\
-  email: \texttt{racorretjer@gmail.com}\\
-  \and 
-  Humberto Ortiz-Zuazaga\thanks{Corresponding author: PO BOX 70377,
-San Juan, PR 00936–8377}\\
-  Department of Computer Science\\
-  Rio Piedras Campus\\
-  University of Puerto Rico\\
-  email: \texttt{humberto@hpcf.upr.edu}\\
-}
-\date{March 15, 2013}
 \maketitle
 
 \begin{abstract}
 We present a novel method of analysis of RNA-Seq data based on majority-logic-decoding. We apply the analysis to a simulation of differential gene expression and compare to a typical statistical analysis with linear models. Our technique results in a markedly improved false positive rate.
 
-\textbf{Keywords:} next-gen sequencing, finite dynamical systems, differential expression.
 \end{abstract}
+\vspace{1em}
+\noindent\textbf{Keywords:}
+ {\small  next-gen sequencing, finite dynamical systems, differential expression} %%%% Replace with your keywords
 
 \section{Introduction}
 
