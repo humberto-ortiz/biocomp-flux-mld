@@ -253,3 +253,33 @@ Humbertos-MacBook:biocomp-flux-mld humberto$ awk -F : '/FBtr[0-9]+/ {print $3}' 
 We've boiled down the 5000 sequences to 26 genes.
 
 I'm giving these to the students to play with.
+
+2015/03/10 - HOZ
+
+The first 26 genes have too few reads. Many transcripts have very few reads.
+
+See count-reads.py
+
+$ python count-reads.py foo-single.fastq > counts.out
+
+Once I've sorted the counts, I can sample randomly from the ones with
+more reads by skipping the first 10000 genes.
+
+humberto@planchita:~/src/dmel/biocomp-flux-mld⟫ tail -n +10000 counts.out | shuf
+ -n 10                                                                          
+FBtr0070043 100
+FBtr0072929 154
+FBtr0303995 295
+FBtr0300139 123
+FBtr0077877 1227
+FBtr0080170 1442
+FBtr0087983 303
+FBtr0300895 681
+FBtr0079432 959
+FBtr0079167 95
+
+Saved the above names to sample.txt. The grab-reads.py snarfs the
+named trascripts from the input.
+
+humberto@planchita:~/src/dmel/biocomp-flux-mld⟫ python grab-reads.py foo-single.fastq > better-sample.fastq
+
